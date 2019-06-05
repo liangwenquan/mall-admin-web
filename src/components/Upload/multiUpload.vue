@@ -1,10 +1,9 @@
 <template> 
   <div>
     <el-upload
-      action="http://macro-oss.oss-cn-shenzhen.aliyuncs.com"
-      :data="dataObj"
+      action=""
+      :http-request="handUpload"
       list-type="picture-card"
-      :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
@@ -20,7 +19,7 @@
   </div>
 </template>
 <script>
-  import {policy} from '@/api/oss'
+  import {policy} from '@/api/common'
 
   export default {
     name: 'multiUpload',
@@ -36,25 +35,16 @@
     data() {
       return {
         dataObj: {
-          policy: '',
-          signature: '',
-          key: '',
-          ossaccessKeyId: '',
-          dir: '',
-          host: ''
+          name: '',
+          url: ''
         },
         dialogVisible: false,
-        dialogImageUrl:null
+        dialogImageUrl: null,
+        fileList: []
       };
     },
     computed: {
-      fileList() {
-        let fileList=[];
-        for(let i=0;i<this.value.length;i++){
-          fileList.push({url:this.value[i]});
-        }
-        return fileList;
-      }
+
     },
     methods: {
       emitInput(fileList) {
@@ -62,6 +52,7 @@
         for(let i=0;i<fileList.length;i++){
           value.push(fileList[i].url);
         }
+        console.log('v', value)
         this.$emit('input', value)
       },
       handleRemove(file, fileList) {
@@ -71,16 +62,14 @@
         this.dialogVisible = true;
         this.dialogImageUrl=file.url;
       },
-      beforeUpload(file) {
-        let _self = this;
+      handUpload(param) {
+        let formData = new FormData()
+        let _self = this
+        formData.append('file', param.file);
         return new Promise((resolve, reject) => {
-          policy().then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
-            _self.dataObj.key = response.data.dir + '/${filename}';
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
+          policy(formData).then(response => {
+            _self.dataObj.name = response.data.name
+            _self.dataObj.url = response.data.full_path
             resolve(true)
           }).catch(err => {
             console.log(err)
@@ -88,8 +77,11 @@
           })
         })
       },
+      beforeUpload(file) {
+
+      },
       handleUploadSuccess(res, file) {
-        this.fileList.push({url: file.name,url:this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
+        this.fileList.push({name: file.name, url: this.dataObj.url});
         this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {

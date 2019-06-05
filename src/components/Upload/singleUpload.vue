@@ -1,8 +1,8 @@
 <template> 
   <div>
     <el-upload
-      action="http://macro-oss.oss-cn-shenzhen.aliyuncs.com"
-      :data="dataObj"
+      action = ""
+      :http-request="handUpload"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-  import {policy} from '@/api/oss'
+  import {policy} from '@/api/common'
 
   export default {
     name: 'singleUpload',
@@ -53,13 +53,9 @@
     },
     data() {
       return {
-        dataObj: {
-          policy: '',
-          signature: '',
-          key: '',
-          ossaccessKeyId: '',
-          dir: '',
-          host: ''
+        dataObj:{
+          name: '',
+          url: ''
         },
         dialogVisible: false
       };
@@ -74,16 +70,17 @@
       handlePreview(file) {
         this.dialogVisible = true;
       },
-      beforeUpload(file) {
-        let _self = this;
+      uploadImg(file) {
+        console.log(file)
+      },
+      handUpload(param) {
+        let formData = new FormData()
+        let _self = this
+        formData.append('file', param.file);
         return new Promise((resolve, reject) => {
-          policy().then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
-            _self.dataObj.key = response.data.dir + '/${filename}';
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
+          policy(formData).then(response => {
+            _self.dataObj.name = response.data.name
+            _self.dataObj.url = response.data.full_path
             resolve(true)
           }).catch(err => {
             console.log(err)
@@ -91,10 +88,14 @@
           })
         })
       },
+      beforeUpload(file) {
+        
+      },
       handleUploadSuccess(res, file) {
+        console.log(res)
         this.showFileList = true;
         this.fileList.pop();
-        this.fileList.push({name: file.name, url: this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
+        this.fileList.push({name: file.name, url: this.dataObj.url});
         this.emitInput(this.fileList[0].url);
       }
     }

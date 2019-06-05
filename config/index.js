@@ -10,7 +10,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/': {
+        // target: 'http://fjdev1.iihwx.com:801/AstoreV2/',
+        // target: 'http://39.98.190.128:8080',
+        target: 'http://admin.hemu.local',
+        changeOrigin: true
+        // target: 'http://192.168.1.22:808/astore_phalcon/',
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

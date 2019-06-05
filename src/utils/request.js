@@ -25,10 +25,10 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
   /**
-  * code为非200是抛错 可结合自己业务进行修改
+  * code为非0是抛错 可结合自己业务进行修改
   */
     const res = response.data
-    if (res.code !== 200) {
+    if (res.code !== 0) {
       Message({
         message: res.message,
         type: 'error',
