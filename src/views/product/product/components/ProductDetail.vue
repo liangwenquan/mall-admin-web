@@ -7,7 +7,7 @@
       <el-form-item label="商品价格：" prop="price">
         <el-input v-model="product.price"></el-input>
       </el-form-item>
-      <el-form-item label="美甲相册：" prop="covers">
+      <el-form-item label="美甲相册：" prop="cover">
         <multi-upload v-model="selectProductPics"></multi-upload>
       </el-form-item>
       <el-form-item label="商品分类：" prop="category_id">
@@ -56,7 +56,7 @@
   import Tinymce from '@/components/Tinymce'
 
   const defaultproduct={
-    covers: [],
+    cover: [],
     content: '',
     enabled: 0,
     category_id: '',
@@ -96,13 +96,13 @@
       //商品的主图和画册图片
       selectProductPics:{
         get:function () {
-          return this.product.covers;
+          return this.product.cover;
         },
         set:function (newValue) {
           if (newValue == null || newValue.length === 0) {
-            this.product.covers = null;
+            this.product.cover = null;
           } else {
-            this.product.covers = newValue;
+            this.product.cover = newValue;
           }
         }
       }

@@ -158,7 +158,14 @@ export const constantRouterMap = [
         name: 'create',
         component: () => import('@/views/product/product/create'),
         meta: {title: '添加商品', icon: 'product-add'}
-      }
+      },
+      {
+        path: 'updateProduct',
+        name: 'updateProduct',
+        component: () => import('@/views/product/product/update'),
+        meta: {title: '修改商品', icon: 'product-add'},
+        hidden: true
+      },
     ]
   },
   {

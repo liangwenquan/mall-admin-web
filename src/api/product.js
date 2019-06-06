@@ -65,7 +65,7 @@ export function updateProduct(id,data) {
 
 export function getProduct(id) {
   return request({
-    url:'/product/updateInfo/'+id,
+    url:'/product/'+id,
     method:'get',
   })
 }

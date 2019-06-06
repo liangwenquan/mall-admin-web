@@ -411,7 +411,7 @@
         });
       },
       handleUpdateProduct(index,row){
-        this.$router.push({path:'/pms/updateProduct',query:{id:row.id}});
+        this.$router.push({path:'/product/updateProduct',query:{id:row.id}});
       },
       handleShowVerifyDetail(index,row){
         console.log("handleShowVerifyDetail",row);

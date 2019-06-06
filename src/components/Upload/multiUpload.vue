@@ -4,6 +4,7 @@
       action=""
       :http-request="handUpload"
       list-type="picture-card"
+      :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
@@ -50,9 +51,8 @@
       emitInput(fileList) {
         let value=[];
         for(let i=0;i<fileList.length;i++){
-          value.push(fileList[i].url);
+          value.push(fileList[i].name);
         }
-        console.log('v', value)
         this.$emit('input', value)
       },
       handleRemove(file, fileList) {
@@ -81,7 +81,7 @@
 
       },
       handleUploadSuccess(res, file) {
-        this.fileList.push({name: file.name, url: this.dataObj.url});
+        this.fileList.push({name: this.dataObj.name, url: this.dataObj.url});
         this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {

@@ -95,7 +95,7 @@
         console.log(res)
         this.showFileList = true;
         this.fileList.pop();
-        this.fileList.push({name: file.name, url: this.dataObj.url});
+        this.fileList.push({name: this.dataObj.name, url: this.dataObj.url});
         this.emitInput(this.fileList[0].url);
       }
     }
