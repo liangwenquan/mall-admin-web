@@ -4,6 +4,7 @@
       action=""
       :http-request="handUpload"
       list-type="picture-card"
+      accept="image/jpeg,image/gif,image/png"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
@@ -40,18 +41,26 @@
           url: ''
         },
         dialogVisible: false,
-        dialogImageUrl: null,
-        fileList: []
+        dialogImageUrl: null
       };
     },
     computed: {
+      fileList() {
+        let fileList=[];
+        if (this.value.length) {
+          for(let i=0;i<this.value.length;i++){
+            fileList.push({url:this.value[i]});
+          }
+        }
 
+        return fileList;
+      }
     },
     methods: {
       emitInput(fileList) {
         let value=[];
         for(let i=0;i<fileList.length;i++){
-          value.push(fileList[i].name);
+          value.push(fileList[i].url);
         }
         this.$emit('input', value)
       },

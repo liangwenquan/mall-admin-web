@@ -23,7 +23,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="图文详情：">
+      <el-form-item label="图文详情：" prop="content">
         <tinymce :width="595" :height="300" v-model="product.content"></tinymce>
       </el-form-item>
       <el-form-item label="权重：" prop="weight">
@@ -69,6 +69,7 @@
     name: 'productDetail',
     components:{SingleUpload, MultiUpload, Tinymce},
     props: {
+      value: Object,
       isEdit: {
         type: Boolean,
         default: false
@@ -88,6 +89,9 @@
           ],
           price: [
             {required: true, message: '请输入商品价格'}
+          ],
+          content: [
+            {required: true, message: '请输入商品详情'}
           ]
         }
       }
@@ -96,13 +100,26 @@
       //商品的主图和画册图片
       selectProductPics:{
         get:function () {
-          return this.product.cover;
+          let pics = this.product.cover;
+          return pics;
         },
         set:function (newValue) {
+          console.log('set', newValue)
           if (newValue == null || newValue.length === 0) {
             this.product.cover = null;
+            this.product.covers = null;
           } else {
             this.product.cover = newValue;
+            let covers = []
+            // 后端不需要完整url，处理掉host
+            if (this.product.cover.length > 0) {
+              for (let i = 0; i < this.product.cover.length; i ++) {
+                if (this.product.cover[i] != null) {
+                  covers.push(this.product.cover[i].replace(process.env.IMAGE_HOST, ''));
+                }
+              }
+            }
+            this.product.covers = covers
           }
         }
       }
