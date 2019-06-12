@@ -104,22 +104,11 @@
           return pics;
         },
         set:function (newValue) {
-          console.log('set', newValue)
           if (newValue == null || newValue.length === 0) {
             this.product.cover = null;
             this.product.covers = null;
           } else {
             this.product.cover = newValue;
-            let covers = []
-            // 后端不需要完整url，处理掉host
-            if (this.product.cover.length > 0) {
-              for (let i = 0; i < this.product.cover.length; i ++) {
-                if (this.product.cover[i] != null) {
-                  covers.push(this.product.cover[i].replace(process.env.IMAGE_HOST, ''));
-                }
-              }
-            }
-            this.product.covers = covers
           }
         }
       }
@@ -162,6 +151,17 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              //需要处理cover参数
+              let covers = []
+              // 后端不需要完整url，处理掉host
+              if (this.product.cover.length > 0) {
+                for (let i = 0; i < this.product.cover.length; i ++) {
+                  if (this.product.cover[i] != null) {
+                    covers.push(this.product.cover[i].replace(process.env.IMAGE_HOST, ''));
+                  }
+                }
+              }
+              this.product.covers = covers.join(",")
               if (this.isEdit) {
                 updateProduct(this.$route.query.id, this.product).then(response => {
                   this.$refs[formName].resetFields();
@@ -181,6 +181,7 @@
                     type: 'success',
                     duration:1000
                   });
+                  this.$router.push({path:'/product/updateProduct',query:{id:response.data.id}});
                 });
               }
             });
